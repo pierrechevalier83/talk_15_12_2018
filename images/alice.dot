@@ -1,0 +1,514 @@
+/// our_id: Alice
+/// peer_list: {
+///   Alice; PeerState(VOTE|SEND|RECV); peers: {}
+///   Bob; PeerState(VOTE|SEND|RECV); peers: {Alice, Bob, Carol, Dave, Eric}
+///   Carol; PeerState(VOTE|SEND|RECV); peers: {Alice, Bob, Carol, Dave, Eric}
+///   Dave; PeerState(VOTE|SEND|RECV); peers: {Alice, Bob, Carol, Dave, Eric}
+///   Eric; PeerState(VOTE|SEND|RECV); peers: {Alice, Bob, Carol, Dave, Eric}
+/// }
+digraph GossipGraph {
+  splines=false
+  rankdir=BT
+
+  style=invis
+  subgraph cluster_Alice {
+    label=Alice
+    Alice [style=invis]
+    "Alice" -> "A_0" [style=invis]
+    "A_0" -> "A_1" [minlen=1]
+    "A_1" -> "A_2" [minlen=1]
+    "A_2" -> "A_3" [minlen=1]
+    "A_3" -> "A_4" [minlen=1]
+    "A_4" -> "A_5" [minlen=1]
+    "A_5" -> "A_6" [minlen=1]
+    "A_6" -> "A_7" [minlen=1]
+    "A_7" -> "A_8" [minlen=1]
+    "A_8" -> "A_9" [minlen=1]
+    "A_9" -> "A_10" [minlen=1]
+    "A_10" -> "A_11" [minlen=3]
+    "A_11" -> "A_12" [minlen=1]
+    "A_12" -> "A_13" [minlen=1]
+    "A_13" -> "A_14" [minlen=1]
+  }
+  "C_1" -> "A_2" [constraint=false]
+  "D_2" -> "A_3" [constraint=false]
+  "B_1" -> "A_4" [constraint=false]
+  "C_2" -> "A_5" [constraint=false]
+  "C_3" -> "A_7" [constraint=false]
+  "D_3" -> "A_8" [constraint=false]
+  "C_5" -> "A_9" [constraint=false]
+  "E_2" -> "A_10" [constraint=false]
+  "C_10" -> "A_11" [constraint=false]
+  "C_11" -> "A_12" [constraint=false]
+  "C_12" -> "A_13" [constraint=false]
+  "B_9" -> "A_14" [constraint=false]
+
+  style=invis
+  subgraph cluster_Bob {
+    label=Bob
+    Bob [style=invis]
+    "Bob" -> "B_0" [style=invis]
+    "B_0" -> "B_1" [minlen=1]
+    "B_1" -> "B_2" [minlen=1]
+    "B_2" -> "B_3" [minlen=1]
+    "B_3" -> "B_4" [minlen=2]
+    "B_4" -> "B_5" [minlen=1]
+    "B_5" -> "B_6" [minlen=1]
+    "B_6" -> "B_7" [minlen=1]
+    "B_7" -> "B_8" [minlen=1]
+    "B_8" -> "B_9" [minlen=2]
+    "B_9" -> "B_10" [minlen=4]
+  }
+  "E_1" -> "B_2" [constraint=false]
+  "E_1" -> "B_3" [constraint=false]
+  "A_4" -> "B_4" [constraint=false]
+  "C_4" -> "B_5" [constraint=false]
+  "C_5" -> "B_7" [constraint=false]
+  "E_7" -> "B_8" [constraint=false]
+  "C_8" -> "B_9" [constraint=false]
+  "C_12" -> "B_10" [constraint=false]
+
+  style=invis
+  subgraph cluster_Carol {
+    label=Carol
+    Carol [style=invis]
+    "Carol" -> "C_0" [style=invis]
+    "C_0" -> "C_1" [minlen=1]
+    "C_1" -> "C_2" [minlen=1]
+    "C_2" -> "C_3" [minlen=1]
+    "C_3" -> "C_4" [minlen=1]
+    "C_4" -> "C_5" [minlen=1]
+    "C_5" -> "C_6" [minlen=1]
+    "C_6" -> "C_7" [minlen=3]
+    "C_7" -> "C_8" [minlen=1]
+    "C_8" -> "C_9" [minlen=1]
+    "C_9" -> "C_10" [minlen=1]
+    "C_10" -> "C_11" [minlen=1]
+    "C_11" -> "C_12" [minlen=1]
+    "C_12" -> "C_13" [minlen=2]
+  }
+  "A_1" -> "C_2" [constraint=false]
+  "A_2" -> "C_3" [constraint=false]
+  "B_3" -> "C_4" [constraint=false]
+  "A_4" -> "C_5" [constraint=false]
+  "B_7" -> "C_7" [constraint=false]
+  "B_7" -> "C_8" [constraint=false]
+  "A_7" -> "C_9" [constraint=false]
+  "A_10" -> "C_10" [constraint=false]
+  "A_10" -> "C_11" [constraint=false]
+  "A_10" -> "C_12" [constraint=false]
+  "B_10" -> "C_13" [constraint=false]
+
+  style=invis
+  subgraph cluster_Dave {
+    label=Dave
+    Dave [style=invis]
+    "Dave" -> "D_0" [style=invis]
+    "D_0" -> "D_1" [minlen=1]
+    "D_1" -> "D_2" [minlen=1]
+    "D_2" -> "D_3" [minlen=3]
+    "D_3" -> "D_4" [minlen=1]
+    "D_4" -> "D_5" [minlen=1]
+    "D_5" -> "D_6" [minlen=3]
+    "D_6" -> "D_7" [minlen=9]
+  }
+  "A_1" -> "D_2" [constraint=false]
+  "A_4" -> "D_3" [constraint=false]
+  "E_4" -> "D_4" [constraint=false]
+  "B_8" -> "D_6" [constraint=false]
+  "B_10" -> "D_7" [constraint=false]
+
+  style=invis
+  subgraph cluster_Eric {
+    label=Eric
+    Eric [style=invis]
+    "Eric" -> "E_0" [style=invis]
+    "E_0" -> "E_1" [minlen=1]
+    "E_1" -> "E_2" [minlen=1]
+    "E_2" -> "E_3" [minlen=1]
+    "E_3" -> "E_4" [minlen=1]
+    "E_4" -> "E_5" [minlen=1]
+    "E_5" -> "E_6" [minlen=1]
+    "E_6" -> "E_7" [minlen=1]
+    "E_7" -> "E_8" [minlen=5]
+    "E_8" -> "E_9" [minlen=6]
+  }
+  "A_1" -> "E_2" [constraint=false]
+  "B_2" -> "E_3" [constraint=false]
+  "D_2" -> "E_4" [constraint=false]
+  "B_3" -> "E_5" [constraint=false]
+  "B_5" -> "E_7" [constraint=false]
+  "B_9" -> "E_8" [constraint=false]
+  "A_14" -> "E_9" [constraint=false]
+
+  {
+    rank=same
+    Alice [style=filled, color=white]
+    Bob [style=filled, color=white]
+    Carol [style=filled, color=white]
+    Dave [style=filled, color=white]
+    Eric [style=filled, color=white]
+  }
+  Alice -> Bob -> Carol -> Dave -> Eric [style=invis]
+
+/// ===== details of events =====
+  "A_0" [fillcolor=white, shape=rectangle, label=<<table border="0" cellborder="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="6">A_0</td></tr>
+</table>>]
+/// cause: Initial
+/// last_ancestors: {Alice: 0}
+
+  "A_1" [style=filled, fillcolor=cyan, shape=rectangle, label=<<table border="0" cellborder="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="6">A_1</td></tr>
+<tr><td colspan="6">Genesis({Alice, Bob, Carol, Dave, Eric})</td></tr>
+</table>>]
+/// cause: Observation(Genesis({Alice, Bob, Carol, Dave, Eric}))
+/// last_ancestors: {Alice: 1}
+
+  "A_2" [fillcolor=white, shape=rectangle, label=<<table border="0" cellborder="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="6">A_2</td></tr>
+</table>>]
+/// cause: Request
+/// last_ancestors: {Alice: 2, Carol: 1}
+
+  "A_3" [fillcolor=white, shape=rectangle, label=<<table border="0" cellborder="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="6">A_3</td></tr>
+</table>>]
+/// cause: Response
+/// last_ancestors: {Alice: 3, Carol: 1, Dave: 2}
+
+  "A_4" [fillcolor=white, shape=rectangle, label=<<table border="0" cellborder="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="6">A_4</td></tr>
+</table>>]
+/// cause: Request
+/// last_ancestors: {Alice: 4, Bob: 1, Carol: 1, Dave: 2}
+
+  "A_5" [fillcolor=white, shape=rectangle, label=<<table border="0" cellborder="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="6">A_5</td></tr>
+</table>>]
+/// cause: Response
+/// last_ancestors: {Alice: 5, Bob: 1, Carol: 2, Dave: 2}
+
+  "A_6" [style=filled, fillcolor=cyan, shape=rectangle, label=<<table border="0" cellborder="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="6">A_6</td></tr>
+<tr><td colspan="6">Add(Fred)</td></tr>
+</table>>]
+/// cause: Observation(Add(Fred))
+/// last_ancestors: {Alice: 6, Bob: 1, Carol: 2, Dave: 2}
+
+  "A_7" [fillcolor=white, shape=rectangle, label=<<table border="0" cellborder="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="6">A_7</td></tr>
+</table>>]
+/// cause: Request
+/// last_ancestors: {Alice: 7, Bob: 1, Carol: 3, Dave: 2}
+
+  "A_8" [fillcolor=white, shape=rectangle, label=<<table border="0" cellborder="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="6">A_8</td></tr>
+</table>>]
+/// cause: Response
+/// last_ancestors: {Alice: 8, Bob: 1, Carol: 3, Dave: 3}
+
+  "A_9" [fillcolor=white, shape=rectangle, label=<<table border="0" cellborder="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="6">A_9</td></tr>
+</table>>]
+/// cause: Response
+/// last_ancestors: {Alice: 9, Bob: 3, Carol: 5, Dave: 3, Eric: 1}
+
+  "A_10" [fillcolor=white, shape=rectangle, label=<<table border="0" cellborder="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="6">A_10</td></tr>
+</table>>]
+/// cause: Response
+/// last_ancestors: {Alice: 10, Bob: 3, Carol: 5, Dave: 3, Eric: 2}
+
+  "A_11" [fillcolor=white, shape=rectangle, label=<<table border="0" cellborder="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="6">A_11</td></tr>
+</table>>]
+/// cause: Response
+/// last_ancestors: {Alice: 11, Bob: 7, Carol: 10, Dave: 3, Eric: 2}
+
+  "A_12" [fillcolor=white, shape=rectangle, label=<<table border="0" cellborder="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="6">A_12</td></tr>
+</table>>]
+/// cause: Response
+/// last_ancestors: {Alice: 12, Bob: 7, Carol: 11, Dave: 3, Eric: 2}
+
+  "A_13" [fillcolor=white, shape=rectangle, label=<<table border="0" cellborder="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="6">A_13</td></tr>
+</table>>]
+/// cause: Response
+/// last_ancestors: {Alice: 13, Bob: 7, Carol: 12, Dave: 3, Eric: 2}
+
+  "A_14" [style=filled, fillcolor=crimson, shape=rectangle, label=<<table border="0" cellborder="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="6">A_14</td></tr>
+<tr><td colspan="6">[Add(Fred)]</td></tr></table>>]
+/// cause: Request
+/// last_ancestors: {Alice: 14, Bob: 9, Carol: 12, Dave: 3, Eric: 7}
+
+  "B_0" [fillcolor=white, shape=rectangle, label=<<table border="0" cellborder="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="6">B_0</td></tr>
+</table>>]
+/// cause: Initial
+/// last_ancestors: {Bob: 0}
+
+  "B_1" [style=filled, fillcolor=cyan, shape=rectangle, label=<<table border="0" cellborder="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="6">B_1</td></tr>
+<tr><td colspan="6">Genesis({Alice, Bob, Carol, Dave, Eric})</td></tr>
+</table>>]
+/// cause: Observation(Genesis({Alice, Bob, Carol, Dave, Eric}))
+/// last_ancestors: {Bob: 1}
+
+  "B_2" [fillcolor=white, shape=rectangle, label=<<table border="0" cellborder="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="6">B_2</td></tr>
+</table>>]
+/// cause: Request
+/// last_ancestors: {Bob: 2, Eric: 1}
+
+  "B_3" [fillcolor=white, shape=rectangle, label=<<table border="0" cellborder="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="6">B_3</td></tr>
+</table>>]
+/// cause: Request
+/// last_ancestors: {Bob: 3, Eric: 1}
+
+  "B_4" [fillcolor=white, shape=rectangle, label=<<table border="0" cellborder="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="6">B_4</td></tr>
+</table>>]
+/// cause: Response
+/// last_ancestors: {Alice: 4, Bob: 4, Carol: 1, Dave: 2, Eric: 1}
+
+  "B_5" [fillcolor=white, shape=rectangle, label=<<table border="0" cellborder="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="6">B_5</td></tr>
+</table>>]
+/// cause: Response
+/// last_ancestors: {Alice: 4, Bob: 5, Carol: 4, Dave: 2, Eric: 1}
+
+  "B_6" [style=filled, fillcolor=cyan, shape=rectangle, label=<<table border="0" cellborder="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="6">B_6</td></tr>
+<tr><td colspan="6">Add(Fred)</td></tr>
+</table>>]
+/// cause: Observation(Add(Fred))
+/// last_ancestors: {Alice: 4, Bob: 6, Carol: 4, Dave: 2, Eric: 1}
+
+  "B_7" [fillcolor=white, shape=rectangle, label=<<table border="0" cellborder="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="6">B_7</td></tr>
+</table>>]
+/// cause: Request
+/// last_ancestors: {Alice: 4, Bob: 7, Carol: 5, Dave: 2, Eric: 1}
+
+  "B_8" [fillcolor=white, shape=rectangle, label=<<table border="0" cellborder="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="6">B_8</td></tr>
+</table>>]
+/// cause: Response
+/// last_ancestors: {Alice: 4, Bob: 8, Carol: 5, Dave: 2, Eric: 7}
+
+  "B_9" [fillcolor=white, shape=rectangle, label=<<table border="0" cellborder="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="6">B_9</td></tr>
+</table>>]
+/// cause: Response
+/// last_ancestors: {Alice: 4, Bob: 9, Carol: 8, Dave: 2, Eric: 7}
+
+  "B_10" [style=filled, fillcolor=crimson, shape=rectangle, label=<<table border="0" cellborder="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="6">B_10</td></tr>
+<tr><td colspan="6">[Add(Fred)]</td></tr></table>>]
+/// cause: Request
+/// last_ancestors: {Alice: 10, Bob: 10, Carol: 12, Dave: 3, Eric: 7}
+
+  "C_0" [fillcolor=white, shape=rectangle, label=<<table border="0" cellborder="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="6">C_0</td></tr>
+</table>>]
+/// cause: Initial
+/// last_ancestors: {Carol: 0}
+
+  "C_1" [style=filled, fillcolor=cyan, shape=rectangle, label=<<table border="0" cellborder="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="6">C_1</td></tr>
+<tr><td colspan="6">Genesis({Alice, Bob, Carol, Dave, Eric})</td></tr>
+</table>>]
+/// cause: Observation(Genesis({Alice, Bob, Carol, Dave, Eric}))
+/// last_ancestors: {Carol: 1}
+
+  "C_2" [fillcolor=white, shape=rectangle, label=<<table border="0" cellborder="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="6">C_2</td></tr>
+</table>>]
+/// cause: Request
+/// last_ancestors: {Alice: 1, Carol: 2}
+
+  "C_3" [fillcolor=white, shape=rectangle, label=<<table border="0" cellborder="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="6">C_3</td></tr>
+</table>>]
+/// cause: Response
+/// last_ancestors: {Alice: 2, Carol: 3}
+
+  "C_4" [fillcolor=white, shape=rectangle, label=<<table border="0" cellborder="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="6">C_4</td></tr>
+</table>>]
+/// cause: Request
+/// last_ancestors: {Alice: 2, Bob: 3, Carol: 4, Eric: 1}
+
+  "C_5" [fillcolor=white, shape=rectangle, label=<<table border="0" cellborder="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="6">C_5</td></tr>
+</table>>]
+/// cause: Request
+/// last_ancestors: {Alice: 4, Bob: 3, Carol: 5, Dave: 2, Eric: 1}
+
+  "C_6" [style=filled, fillcolor=cyan, shape=rectangle, label=<<table border="0" cellborder="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="6">C_6</td></tr>
+<tr><td colspan="6">Add(Fred)</td></tr>
+</table>>]
+/// cause: Observation(Add(Fred))
+/// last_ancestors: {Alice: 4, Bob: 3, Carol: 6, Dave: 2, Eric: 1}
+
+  "C_7" [fillcolor=white, shape=rectangle, label=<<table border="0" cellborder="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="6">C_7</td></tr>
+</table>>]
+/// cause: Response
+/// last_ancestors: {Alice: 4, Bob: 7, Carol: 7, Dave: 2, Eric: 1}
+
+  "C_8" [fillcolor=white, shape=rectangle, label=<<table border="0" cellborder="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="6">C_8</td></tr>
+</table>>]
+/// cause: Request
+/// last_ancestors: {Alice: 4, Bob: 7, Carol: 8, Dave: 2, Eric: 1}
+
+  "C_9" [fillcolor=white, shape=rectangle, label=<<table border="0" cellborder="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="6">C_9</td></tr>
+</table>>]
+/// cause: Response
+/// last_ancestors: {Alice: 7, Bob: 7, Carol: 9, Dave: 2, Eric: 1}
+
+  "C_10" [fillcolor=white, shape=rectangle, label=<<table border="0" cellborder="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="6">C_10</td></tr>
+</table>>]
+/// cause: Request
+/// last_ancestors: {Alice: 10, Bob: 7, Carol: 10, Dave: 3, Eric: 2}
+
+  "C_11" [fillcolor=white, shape=rectangle, label=<<table border="0" cellborder="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="6">C_11</td></tr>
+</table>>]
+/// cause: Request
+/// last_ancestors: {Alice: 10, Bob: 7, Carol: 11, Dave: 3, Eric: 2}
+
+  "C_12" [fillcolor=white, shape=rectangle, label=<<table border="0" cellborder="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="6">C_12</td></tr>
+</table>>]
+/// cause: Request
+/// last_ancestors: {Alice: 10, Bob: 7, Carol: 12, Dave: 3, Eric: 2}
+
+  "C_13" [style=filled, fillcolor=crimson, shape=rectangle, label=<<table border="0" cellborder="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="6">C_13</td></tr>
+<tr><td colspan="6">[Add(Fred)]</td></tr></table>>]
+/// cause: Response
+/// last_ancestors: {Alice: 10, Bob: 10, Carol: 13, Dave: 3, Eric: 7}
+
+  "D_0" [fillcolor=white, shape=rectangle, label=<<table border="0" cellborder="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="6">D_0</td></tr>
+</table>>]
+/// cause: Initial
+/// last_ancestors: {Dave: 0}
+
+  "D_1" [style=filled, fillcolor=cyan, shape=rectangle, label=<<table border="0" cellborder="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="6">D_1</td></tr>
+<tr><td colspan="6">Genesis({Alice, Bob, Carol, Dave, Eric})</td></tr>
+</table>>]
+/// cause: Observation(Genesis({Alice, Bob, Carol, Dave, Eric}))
+/// last_ancestors: {Dave: 1}
+
+  "D_2" [fillcolor=white, shape=rectangle, label=<<table border="0" cellborder="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="6">D_2</td></tr>
+</table>>]
+/// cause: Request
+/// last_ancestors: {Alice: 1, Dave: 2}
+
+  "D_3" [fillcolor=white, shape=rectangle, label=<<table border="0" cellborder="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="6">D_3</td></tr>
+</table>>]
+/// cause: Request
+/// last_ancestors: {Alice: 4, Bob: 1, Carol: 1, Dave: 3}
+
+  "D_4" [fillcolor=white, shape=rectangle, label=<<table border="0" cellborder="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="6">D_4</td></tr>
+</table>>]
+/// cause: Response
+/// last_ancestors: {Alice: 4, Bob: 2, Carol: 1, Dave: 4, Eric: 4}
+
+  "D_5" [style=filled, fillcolor=cyan, shape=rectangle, label=<<table border="0" cellborder="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="6">D_5</td></tr>
+<tr><td colspan="6">Add(Fred)</td></tr>
+</table>>]
+/// cause: Observation(Add(Fred))
+/// last_ancestors: {Alice: 4, Bob: 2, Carol: 1, Dave: 5, Eric: 4}
+
+  "D_6" [fillcolor=white, shape=rectangle, label=<<table border="0" cellborder="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="6">D_6</td></tr>
+</table>>]
+/// cause: Request
+/// last_ancestors: {Alice: 4, Bob: 8, Carol: 5, Dave: 6, Eric: 7}
+
+  "D_7" [style=filled, fillcolor=crimson, shape=rectangle, label=<<table border="0" cellborder="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="6">D_7</td></tr>
+<tr><td colspan="6">[Add(Fred)]</td></tr></table>>]
+/// cause: Response
+/// last_ancestors: {Alice: 10, Bob: 13, Carol: 12, Dave: 7, Eric: 7}
+
+  "E_0" [fillcolor=white, shape=rectangle, label=<<table border="0" cellborder="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="6">E_0</td></tr>
+</table>>]
+/// cause: Initial
+/// last_ancestors: {Eric: 0}
+
+  "E_1" [style=filled, fillcolor=cyan, shape=rectangle, label=<<table border="0" cellborder="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="6">E_1</td></tr>
+<tr><td colspan="6">Genesis({Alice, Bob, Carol, Dave, Eric})</td></tr>
+</table>>]
+/// cause: Observation(Genesis({Alice, Bob, Carol, Dave, Eric}))
+/// last_ancestors: {Eric: 1}
+
+  "E_2" [fillcolor=white, shape=rectangle, label=<<table border="0" cellborder="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="6">E_2</td></tr>
+</table>>]
+/// cause: Request
+/// last_ancestors: {Alice: 1, Eric: 2}
+
+  "E_3" [fillcolor=white, shape=rectangle, label=<<table border="0" cellborder="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="6">E_3</td></tr>
+</table>>]
+/// cause: Response
+/// last_ancestors: {Alice: 1, Bob: 2, Eric: 3}
+
+  "E_4" [fillcolor=white, shape=rectangle, label=<<table border="0" cellborder="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="6">E_4</td></tr>
+</table>>]
+/// cause: Request
+/// last_ancestors: {Alice: 1, Bob: 2, Dave: 2, Eric: 4}
+
+  "E_5" [fillcolor=white, shape=rectangle, label=<<table border="0" cellborder="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="6">E_5</td></tr>
+</table>>]
+/// cause: Response
+/// last_ancestors: {Alice: 1, Bob: 3, Dave: 2, Eric: 5}
+
+  "E_6" [style=filled, fillcolor=cyan, shape=rectangle, label=<<table border="0" cellborder="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="6">E_6</td></tr>
+<tr><td colspan="6">Add(Fred)</td></tr>
+</table>>]
+/// cause: Observation(Add(Fred))
+/// last_ancestors: {Alice: 1, Bob: 3, Dave: 2, Eric: 6}
+
+  "E_7" [fillcolor=white, shape=rectangle, label=<<table border="0" cellborder="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="6">E_7</td></tr>
+</table>>]
+/// cause: Request
+/// last_ancestors: {Alice: 4, Bob: 5, Carol: 4, Dave: 2, Eric: 7}
+
+  "E_8" [fillcolor=white, shape=rectangle, label=<<table border="0" cellborder="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="6">E_8</td></tr>
+</table>>]
+/// cause: Request
+/// last_ancestors: {Alice: 4, Bob: 9, Carol: 8, Dave: 2, Eric: 8}
+
+  "E_9" [style=filled, fillcolor=crimson, shape=rectangle, label=<<table border="0" cellborder="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="6">E_9</td></tr>
+<tr><td colspan="6">[Add(Fred)]</td></tr></table>>]
+/// cause: Response
+/// last_ancestors: {Alice: 15, Bob: 9, Carol: 12, Dave: 3, Eric: 9}
+
+}
+

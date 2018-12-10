@@ -53,6 +53,12 @@
       .remark-code-span-highlighted {
          background-color: #f0572a;
       }
+      .large-pic img {
+        height: auto;
+        width: auto;
+        max-height: 350px;
+        max-width: 80%;
+      }
       .fitted-pic img {
         height: auto;
         width: auto;
@@ -141,6 +147,7 @@ class: classy_text
 template: textures
 background-image: url("assets/images/texture_1.png"), url("assets/images/texture_3.png"), url("assets/images/texture_2.png"), url("assets/images/yellow.png"), url("assets/images/yellow.png")
 background-color: #f5f4f2
+.logo[![image](images/rustrush.png)]
 <br><br><br>
 
 ---
@@ -350,11 +357,995 @@ template: sea
 <br><br><br>
 #### RustRush 2018
 #### Pierre Chevalier
+#### Maidsafe
+
+---
+template: sea
+
+## Beyond blockchain: .grey_text[PARSEC]
+### .grey_text[Bringing consensus to the next level with Rust]
+
+---
+template: sea_2
+# When I say blockchain...
+.large-pic[![image](images/aged-brown-chain.jpg)]
+
+---
+template: sea_3
+# When I say blockchain...
+### You may think:
+
+--
+count: false
+* Buzzword
+
+
+--
+count: false
+* Volatility
+
+
+--
+count: false
+* Sh*tcoins
+
+
+--
+count: false
+* Scams
+
+
+--
+count: false
+* Pump 'n dump
+
+
+---
+template: sea_2
+# When I say blockchain...
+.large-pic[![](images/boat-chain-dawn-119562.jpg)]
+
+---
+template: sea_3
+# When I say blockchain...
+### I remember:
+
+--
+count: false
+* One simple, elegant idea
+
+
+--
+count: false
+* Expressed in a short whitepaper
+
+
+???
+Only 9 pages
+Mostly plain english
+--
+count: false
+* That removed the need for trust in money
+
+
+--
+count: false
+* And took the world by storm
+
+
+---
+template: sea_2
+# Proof of work
+.large-pic[![image](images/backlit-clouds-dawn-162568.jpg)]
+
+
+???
+All participants compete to generate a nonce that when hashed with the data contained in the block has a specific property (for instance, starts with a certain number of zeroes)
+
+Consensus mechanism
+
+Sybil prevention mechanism
+
+Reminder of the power of an idea
+---
+template: sea_3
+# Meanwhile, in Scotland
+.large-pic[![image](images/agriculture-animal-animal-photography-420233.jpg)]
+
+---
+template: sea_2
+# An ambitious idea
+.large-pic[![image](images/david-irvine.jpg)]
+
+
+---
+template: sea_3
+# Remove the server
+.large-pic[![image](images/bandwidth-close-up-computer-1148820.jpg)]
+
+---
+template: sea_2
+# No more spying
+.large-pic[![image](images/architecture-building-camera-374103.jpg)]
+
+---
+template: sea_3
+# No more data breaches
+.large-pic[![image](images/1895-accident-black-and-white-73821.jpg)]
+
+---
+template: sea_2
+# Secure
+# Access
+# For
+# Everyone
+
+---
+template: sea_3
+# A network for humans
+.large-pic[![image](images/baby-children-cute-264109.jpg)]
+
+???
+Our values
+---
+template: sea_2
+# No mean feat
+.large-pic[![image](images/sisyphus.jpg)]
+
+???
+It involves redesigning a large chunk of the internet protocols
+* DNS,
+* peer to peer network
+* encryption
+* consensus
+
+---
+template: sea_3
+# To learn more
+--
+count: false
+<br><br>
+# [safenetwork.tech](https://safenetwork.tech)
+
+---
+template: sea
+
+## .grey_text[Beyond blockchain:] PARSEC
+### Bringing consensus to the next level .grey_text[with Rust]
+
+---
+template: birds_4
+## PARSEC
+### The quest for consensus
+--
+count: false
+
+- Asynchronous
+???
+We're speaking of a real world network hosted on people's computers.
+We cannot make assumptions on the time it takes for a node to respond.
+--
+count: false
+- Scalable
+???
+Optimal complexity: O(N*log(N))
+--
+count: false
+- Permission-less
+???
+Can support dynamic membership: nodes die
+--
+count: false
+- Open Source
+???
+GPL-v3
+Necessary to fit within our ethos
+--
+count: false
+- Simple
+???
+Simplicity is a property that is extremely underrated.
+If an algorithm is simple, it improves the security of the implementation
+as anyone can reason about it and see bugs.
+
+---
+template:birds
+## PARSEC
+.fitted-pic[![PARSEC overview](images/parsec_overview.png)]
+???
+### In a nutshell
+
+Before diving too deep into the details; let's cover PARSEC at a high level:
+
+- Nodes on the network use gossip to communicate with each other.
+Gossip is a very efficient way to communicate information in a trustless network.
+
+- As they are gossiping to each other, each node keeps a full record of everything that has been gossiped to them. We call this record the gossip graph.
+
+- The gossip graph is a data structure that is eventually consistent; which means that even though different nodes will build different gossip graphs, at some point nodes will have a proof that something that's in their graph will eventually make it to other nodes' graphs.
+
+- What PARSEC does is infer an order on events that were communicated from the gossip graph
+
+---
+template:birds_3
+## PARSEC
+.fitted-pic[![Gossip](images/gossip.jpg)]
+???
+### Gossip
+
+Now when I said: nodes gossip to each other, this may seem a bit vague; but it's not.
+The gossip protocol is a well known mathematical construct to spread information in distributed systems.
+
+The idea is to spread information in a way that is totally resilient to any node being dishonest but also efficient.
+
+- Broadcast: inefficient
+O(N^2)
+- Round Robin: not resilient
+O(N)
+- Gossip: pick partner at random every fixed time interval
+O(N*log(N))
+
+---
+template:birds
+## PARSEC
+.fitted-pic[![Signatures](images/signature.jpg)]
+???
+Gossiping information is enough to spread it in a resilient manner, but it's not enough to establish trust or to decide an order in which things happened on the network.
+
+Nodes keep a record of everything that's been gossiped to them and they transmit that to other nodes when they're gossiping to them.
+
+They do this with cryptograpically signed messages, which means that they can be proven to have propagated that version of the truth.
+
+This means that if a node sent you a version of the truth and sent someone else a different version; this node would eventually be caught in their lie.
+
+---
+template:birds_3
+## PARSEC
+
+### GossipEvent
+
+```rust
+struct Event<T: NetworkEvent, P: PublicId> {
+*   creator: P,
+    signature: P::Signature,
+    self_parent: Option<Hash>,
+    other_parent: Option<Hash>,
+    observation: Option<Vote<T, P>>,
+}
+```
+---
+template:birds_3
+count:false
+## PARSEC
+
+### GossipEvent
+
+```rust
+struct Event<T: NetworkEvent, P: PublicId> {
+    creator: P,
+*   signature: P::Signature,
+    self_parent: Option<Hash>,
+    other_parent: Option<Hash>,
+    observation: Option<Vote<T, P>>,
+}
+```
+---
+template:birds_3
+count:false
+## PARSEC
+
+### GossipEvent
+
+```rust
+struct Event<T: NetworkEvent, P: PublicId> {
+    creator: P,
+    signature: P::Signature,
+*   self_parent: Option<Hash>,
+    other_parent: Option<Hash>,
+    observation: Option<Vote<T, P>>,
+}
+```
+---
+template:birds_3
+count:false
+## PARSEC
+
+### GossipEvent
+
+```rust
+struct Event<T: NetworkEvent, P: PublicId> {
+    creator: P,
+    signature: P::Signature,
+    self_parent: Option<Hash>,
+*   other_parent: Option<Hash>,
+    observation: Option<Vote<T, P>>,
+}
+```
+---
+template:birds_3
+count:false
+## PARSEC
+
+### GossipEvent
+
+```rust
+struct Event<T: NetworkEvent, P: PublicId> {
+    creator: P,
+    signature: P::Signature,
+    self_parent: Option<Hash>,
+    other_parent: Option<Hash>,
+*   observation: Option<Vote<T, P>>,
+}
+```
+---
+template:birds_2
+## PARSEC
+.fitted-pic[![Gossip-graph-0](images/gossip_graph_0.svg)]
+???
+Let's dive in and see what a gossip graph may look like.
+
+We will start by illustrating how a gossip graph may get generated and then we will use it to explain some related concepts.
+
+We start by introducing our players. We have a network with four members, Alice, Bob, Carol and Dave. They start with nothing, but the situation will change soon.
+
+---
+template:birds_2
+count:false
+## PARSEC
+.fitted-pic[![Gossip-graph-1](images/gossip_graph_1.svg)]
+
+???
+Bob creates his first event (he observed something going on in the network).
+
+---
+template:birds_2
+count:false
+## PARSEC
+.fitted-pic[![Gossip-graph-2](images/gossip_graph_2.svg)]
+
+???
+Bob gossips to Carol, which prompts her to create her own event. Note that she doesn't just store her event, but also the one she got from Bob.
+
+---
+template:birds_2
+count:false
+## PARSEC
+.fitted-pic[![Gossip-graph-3](images/gossip_graph_3.svg)]
+
+???
+Now Bob gossips to Alice, too.
+
+---
+template:birds_2
+count:false
+## PARSEC
+.fitted-pic[![Gossip-graph-4](images/gossip_graph_4.svg)]
+
+???
+Alice responds to Bob, so Bob creates another event.
+
+---
+template:birds_2
+count:false
+## PARSEC
+.fitted-pic[![Gossip-graph-5](images/gossip_graph_5.svg)]
+
+???
+In the meantime, Carol gossips to Dave.
+
+---
+template:birds_2
+count:false
+## PARSEC
+.fitted-pic[![Gossip-graph-6](images/gossip_graph_6.svg)]
+
+???
+...and to Alice.
+
+---
+template:birds_2
+count:false
+## PARSEC
+.fitted-pic[![Gossip-graph-7](images/gossip_graph_7.svg)]
+
+???
+Dave responds to Carol.
+
+---
+template:birds_2
+count:false
+## PARSEC
+.fitted-pic[![Gossip-graph-8](images/gossip_graph_8.svg)]
+
+???
+Carol gossips the event created by Dave's response to Bob.
+
+---
+template:birds_2
+count:false
+## PARSEC
+.fitted-pic[![Gossip-graph-9](images/gossip_graph_9.svg)]
+
+???
+Explain how there is some asynchrony going on - Bob sent gossip to Carol before he received new gossip from her, hence the other-parent is an older event.
+
+---
+template:birds_2
+count:false
+## PARSEC
+.fitted-pic[![Gossip-graph-10](images/gossip_graph_10.svg)]
+
+???
+Bob sends updated gossip to Alice.
+
+---
+template:birds_2
+count:false
+## PARSEC
+.fitted-pic[![Gossip-graph-11](images/gossip_graph_11.svg)]
+
+???
+Carol gossips to Dave.
+
+---
+template:birds_2
+count:false
+## PARSEC
+.fitted-pic[![Gossip-graph-12](images/gossip_graph_12.svg)]
+
+???
+
+- Names
+- consistency
+- god view
+- votes/observations
+
+Now let's name all the gossip events. We will call them by the first letter of creator's name and the sequence index, so Alice's events are a0, a1, a2..., Bob's are b0, b1,... etc. (Those are just arbitrary names to focus our attention when we talk about the graph.)
+
+Note that since every time nodes gossip, they actually send everything they have, every node has _exactly_ all the ancestors of its latest event. Since the gossip events contain hashes of their parents, if two nodes have copies of the same single event, they are also guaranteed to have identical copies of all ancestors of this event. We say that their graphs are _consistent_.
+
+By the way, this graph can't be a whole gossip graph stored by a single node, as there is no event that all other events are ancestors of. We should consider this illustration a "God's view", or just a part of a larger graph of a single node that contains some later events.
+
+Also note that some of these gossip events could contain votes, which an observation by a node of something happening in the network. (The first event created by Bob probably does.)
+
+---
+template:birds_1
+## PARSEC
+
+.fitted-pic[![Eye](images/eye.png)]
+
+???
+Once we have the gossip graph, we can start talking about its properties. One of the important concept in such a graph is the concept of an event _seeing_ another event.
+
+---
+template:birds_2
+## PARSEC
+.fitted-pic[![Seen-1](images/seen_1.svg)]
+
+???
+Here is an example. We say that a1 _sees_ c0, because c0 is a1's ancestor. There is a caveat here - if a node was malicious and created a _fork_, and both branches of the fork contain ancestors of our event, then we say that it doesn't see any of them. This is an important protection against malicious behaviour - if you try to game the system, you lose all influence you might have had. We will expand on that in a moment.
+
+---
+template:birds_2
+count:false
+## PARSEC
+.fitted-pic[![Seen-2](images/seen_2.svg)]
+
+???
+Another example: c2 sees b0. This is just to showcase that the event being seen doesn't have to be a direct ancestor of the event seeing it.
+
+---
+template:birds_1
+## PARSEC
+.fitted-pic[![Fork](images/fork.jpg)]
+
+???
+We mentioned forks before...
+
+---
+template:birds_2
+## PARSEC
+.fitted-pic[![Fork-0](images/fork_0.svg)]
+
+???
+In this example Carol is malicious and tried passing different information to different nodes. She created events c1 and c1' that both have c0 as the parent.
+
+---
+template:birds_2
+count:false
+## PARSEC
+.fitted-pic[![Fork-1](images/fork_1.svg)]
+
+???
+Nothing special happens at first. Event d1 sees c1' normally.
+
+---
+template:birds_2
+count:false
+## PARSEC
+.fitted-pic[![Fork-2](images/fork_2.svg)]
+
+???
+It is at d2 that interesting things happen. d2 has both c1 and c1' among its ancestors. Upon creation of this event, Dave will know that something fishy is happening. By the definition of seeing, even though d1 sees c1', d2 doesn't see either c1 or c1'. In fact, it and its descendants won't see any event created by Carol at all.
+
+---
+template:birds_1
+## PARSEC
+
+### Supermajority
+
+> A supermajority is a subset of the network<br>
+> containing more than 2/3 of the total number of nodes
+
+???
+Let us now introduce a notion that will be used quite a lot.
+
+The notion of a majority is rather well known. Unfortunately, in the presence of malicious actors, who can constitute up to 1/3 of the network, we cannot rely on just a majority, as a significant portion of it might be the bad guys. Thus, we define something more: a supermajority, which is more than 2/3 of the network. It has two nice properties.
+
+--
+count:false
+#### Properties
+* A supermajority contains a majority of the honest nodes
+
+???
+First, a supermajority will always contain the majority of honest nodes. So whatever a supermajority says, we know that a majority of honest nodes agree.
+
+--
+count:false
+* Two supermajorities _always_ have an honest node in common
+
+???
+Second, any two supermajorities are guaranteed to have an honest node in common. This second property is something that makes supermajorities a very useful concept.
+
+Of course, we could get those two properties by requiring 100% of nodes in a supermajority - but then the malicious nodes could stop us from collecting one. In this case, as long as the malicious nodes constitute less than 1/3 of the network, we will be fine.
+
+---
+template:birds_2
+## PARSEC
+.fitted-pic[![Strongly-seen-0](images/sauron.png)]
+
+???
+Another important concept is the one of _strongly seeing_. An event seeing another event can be thought of as a proof that the first event's creator has received the second event and that it wasn't aware of any forks by the second event's creator at that time. Strongly seeing provides something much stronger.
+
+---
+template:birds_1
+## PARSEC
+.fitted-pic[![Strongly-seen-1](images/strongly_seen_1.svg)]
+
+???
+To say that event A strongly sees event B, we need event A to see events created by a supermajority of nodes that all see B.
+
+Another possible wording of strongly seeing is: A strongly sees B if there are directed paths from B to A that together pass through events created by a supermajority of nodes. Note that the initial and final events count, too.
+
+In this example a1 strongly sees b0. It sees itself (a1), c0 and b0 itself, all of which see b0. These events are created by Alice, Bob and Carol, so 3 nodes, which are more than 2/3 out of 4.
+
+---
+template:birds_1
+count:false
+## PARSEC
+.fitted-pic[![Strongly-seen-2](images/strongly_seen_2.svg)]
+
+???
+Let's look at another example. We have d1 seeing c2, b1 and a0. Those are events by 4 different creators that all see a0. Thus, d1 strongly sees a0.
+
+---
+template:birds_1
+count:false
+## PARSEC
+.fitted-pic[![Strongly-seen-3](images/strongly_seen_3.svg)]
+
+???
+In this example we look at a2 and a0. The only events seeing a0 that a2 sees are events created by Alice and Bob. These are just 2 out of 4, so not a supermajority, so a2 doesn't strongly see a0.
+
+The reason strongly seeing is so important is because it provides a strong guarantee: if an event strongly sees an event created by node X, no other event can strongly see an event created by X that is on another branch of a fork.
+
+---
+template:birds_2
+## PARSEC
+
+### Strongly seen
+
+> If event `x` strongly sees event `y`, no other event<br>
+> can strongly see any event by `y`'s creator that is<br>
+> on a different branch of a fork.
+
+???
+Assume they could.
+
+Assume Carol created a fork, and an event by Alice strongly sees event cn, and an event by Bob strongly sees cn'. This means that Alice's event sees events by a supermajority of creators that see cn. Bob's event sees events by a supermajority of creators that see cn'.
+
+---
+template:birds_2
+count:false
+## PARSEC
+
+### Strongly seen
+
+> If event `x` strongly sees event `y`, no other event<br>
+> can strongly see any event by `y`'s creator that is<br>
+> on a different branch of a fork.
+
+???
+The supermajorities must have an honest node in common - say Dave. Dave would have to have created an event that sees cn and an event that sees cn'. But Dave is honest, so one of those is an ancestor of the other. Say d4 sees cn', and d3 (ancestor of d4) sees cn.
+
+This means that cn is also an ancestor of d4. But by definition of seeing, it follows that d4 can't see either cn or cn', because both branches of the fork contain one of its ancestors. This is a contradiction, because we assumed that d4 sees cn'.
+
+---
+template:birds_1
+## PARSEC
+.fitted-pic[![Interesting](images/interesting_event.svg)]
+???
+Now, as we mentioned when describing gossip graphs, some of the events contain votes from nodes.
+
+For instance Alice may learn that Eric would like to join the network and then vote for this.
+
+We could reach consensus on the order of any one of these votes, and that would totally work; but for us, in the SAFE Network, we only care about votes that have reached quorum. So in our case, we will only be interested in events that **see** **gossip events** containing **votes** for a given **network event** created by a supermajority of nodes.
+
+But our case is just our case - other users of PARSEC may define interesting events differently. What matters is that some of the events are interesting and this is the starting point for the rest of the algorithm.
+
+---
+template:birds_2
+## PARSEC
+.fitted-pic[![Observer-0](images/observer.jpg)]
+
+???
+Building on this concept of strongly seen, we can define the concept of an observer.
+
+The technical definition is: a gossip event that strongly sees interesting gossip events proposed by a supermajority of nodes;
+
+But what it means is that after this gossip event, we know that the information in the graph has been propagated beyond the point of no return and cannot be censored by a malicious actor.
+
+This guarentees consensus on these events; but doesn't define an order.
+
+Let's see an example.
+
+---
+template:birds_1
+## PARSEC
+.fitted-pic[![Observer-1](images/observer_1.svg)]
+
+???
+Say we want to check whether a2 is an observer. We must check which interesting events this event can strongly see.
+
+It can't strongly see the interesting event created by Alice; so, that's 0/1.
+
+---
+template:birds_1
+count:false
+## PARSEC
+.fitted-pic[![Observer-2](images/observer_2.svg)]
+
+???
+It can strongly see Bob's interesting event. We are at 1/2.
+
+---
+template:birds_1
+count:false
+## PARSEC
+.fitted-pic[![Observer-3](images/observer_3.svg)]
+
+???
+It can also strongly see Carol's interesting event, which brings us to 2/3.
+
+---
+template:birds_1
+count:false
+## PARSEC
+.fitted-pic[![Observer-4](images/observer_4.svg)]
+
+???
+And finally, it can also strongly see Dave's interesting event. So it can strongly see interesting events created by 3 out of 4 nodes.
+
+---
+template:birds_1
+count:false
+## PARSEC
+.fitted-pic[![Observer-5](images/observer_5.svg)]
+
+???
+3 out of 4 is a supermajority. a2 is an observer.
+
+---
+template:birds_2
+## PARSEC
+.fitted-pic[![Meta-election-0](images/meta_election_0.svg)]
+
+???
+Say that multiple nodes created events that are observers. Each observer strongly sees interesting events created by a supermajority, but they might see different supermajorities. How do we get them to agree which of these interesting events should be the next one?
+
+We do this with a process called meta-election. This process allows the nodes to agree about a single binary value for every node: this value means whether the given node's interesting event should be considered for being the next one or not.
+
+---
+template:birds_2
+count:false
+## PARSEC
+.fitted-pic[![Meta-election-1](images/meta_election_1.svg)]
+
+???
+To illustrate, we will follow the process of deciding whether Alice's interesting event will be considered for being the next agreed one.
+
+The process starts with observers, and every observer gets a binary value associated with it. The value says whether this observer can strongly see an interesting event created by the node being the subject of the meta-election.
+
+In our example, Alice's observer can strongly see Alice's interesting event; so can Dave's observer. Bob's and Carol's observers cannot.
+
+Thus, the first estimate is "true" for Alice and Dave, and "false" for Bob and Carol.
+
+Note that the values associated with observers are purely functions of the structure of the graph. No additional data needs to be exchanged - each node can arrive at the same values for every observer independently.
+
+---
+template:birds_1
+## PARSEC
+
+--
+count:false
+#### Binary Agreement
+* Mostefaoui A., Hamouna M., Raynal M.<br>
+  Signature-Free Asynchronous Byzantine Consensus with t < n/3 and O(n^2) Messages, ACM PODC (2014)
+--
+count:false
+
+#### Concrete coin
+* Micali S.<br>
+  Byzantine Agreement, Made Trivial, (2018)
+---
+template:birds_3
+## PARSEC
+.fitted-pic[![problem_solved](images/problem_solved.png)]
+???
+And so the problem of consensus is solved in PARSEC. Except for the detail that we don't actually use or even have a common coin. We use a concrete coin instead.
+
+---
+template:birds_2
+## PARSEC
+### Algorithm properties
+???
+So with PARSEC, we achieved to find a solution to the Byzantine Generals Problem that is:
+--
+count: false
+
+* Asynchronous ✓ (*)
+???
+Almost asynchronous:
+- Every step of the algorithm is fully asynchronous with one exception: the concrete coin
+- In that step, we can't claim we are fully asynchronous as we don't meet the technical theoretical requirements; although in practice, it's very unlikely to make a difference
+- The synchrony assumption we have is still less than that of any competing protocol that scales like ours does
+- We are currently focused on implementing the algorithm we already have as this is necessary to get the SAFE Network off the ground; but we think we may be able to make that last step fully asynchronous with no asterisque with a little bit more research
+--
+count: false
+* Scalable ✓
+???
+No compromise: PARSEC can reach consensus in O(N*log(N)) which is at the theoretical limit for the number of nodes.
+---
+template:birds_2
+count: false
+## PARSEC
+### Algorithm properties
+* Asynchronous ✓ (*)
+* Scalable ✓
+* Permission-less ✓
+???
+The algorithm can operate in a completely permission-less setting.
+The only requirement is that less than a third of the participants at any time are malicious, which we guarentee in the SAFE Network with a number of Sybil protection measures such as node ageing.
+Nodes can join a section and leave it without affecting consensus and without requiring any synchronous step.
+--
+count: false
+* Open Source ✓
+???
+Not only in license, GPL-V3 which is Free software, but also in our ethos.
+We have already received 2 contributions to the PARSEC github and feedback on the whitepaper from members of the forum and even from Vlad Zamfir from Ethereum.
+--
+count: false
+* Simple ✓
+???
+In the litterature, you find all kinds of fancy algorithms to solve the Byzantine Generals Problem or parts of it; and most of them aren't even efficient.
+Our algorithm only uses simple ideas and composes them to make an elegant solution.
+
+Not to make it sound like we're some kinds of geniuses: the two most powerful, simple and elegant ideas behind PARSEC are the way we solve binary consensus and the concrete coin idea. Both ideas were shameless-ly ripped off from existing papers :D
+
+---
+template: sea
+
+## .grey_text[Beyond blockchain: PARSEC]
+### .grey_text[Bringing consensus to the next level] with Rust
+
+---
+template: fields 
+# Rust
+.fitted-pic[![rust](images/ferris.png)]
+
+---
+template: fields_3 
+# Trifecta (obviously)
+.fitted-pic[![rust](images/trifecta.jpg)]
+
+???
+We're started using rust for the same reasons everyone does:
+The holy trifecta:
+Peanut butter and jelly and more peanut butter
+* Speed
+* Security
+* Concurrency
+
+Our values:
+* Security
+* Inclusiveness (== Speed)
+
+---
+template: fields_2
+# An ecosystem
+.fitted-pic[![ecosystem](images/ecosystem.jpg)]
+
+???
+Beyond the obvious trifecta, what we discovered by working with rust over time is that there is an entire ecosystem at play that will conspire to making your project successful.
+Also, importantly for us, this ecosystem crucially share our values.
+
+---
+template: fields
+# Community
+
+.fitted-pic[![ecosystem](images/rust_community.jpg)]
+???
+## Story time
+- RFC process (that we use too)
+- How I went to rustfest Paris and Rome, London meetup, inspirational
+
+---
+template: fields_4
+# Code of conduct
+
+> * We are committed to providing a **friendly**, **safe** and<br>
+>   **welcoming** environment for **all**, regardless of level<br>
+>   of experience, gender identity and expression,<br>
+>   sexual orientation, disability, personal appearance,<br>
+>   body size, race, ethnicity, age, religion,<br>
+>   nationality, or other similar characteristic.
+> * [...]
+
+---
+template: fields
+# Awesome tools
+
+```
+rustup component add clippy
+```
+
+```
+rustup component add rustfmt
+```
+
+```
+rustup component add rls
+```
+
+## 💗 2018 *#YOLO*
+
+---
+template: fields_2
+
+# Borrow checker
+
+.fitted-pic[![borrow checker](images/borrow_checker.png)]
+
+---
+template: fields_3
+
+# Functional testing
+
+.fitted-pic[![alice](images/alice.dot.svg)]
+
+???
+We think of the pb in terms of graphs
+
+---
+template: fields_2
+count: false
+
+# Functional testing
+
+
+```
+digraph GossipGraph {
+...
+  subgraph cluster_Alice {
+    ...
+    "A_0" -> "A_1"
+    "A_1" -> "A_2"
+    "A_2" -> "A_3"
+    ...
+  }
+  "C_1" -> "A_2"
+  "D_2" -> "A_3"
+...
+}
+```
+
+???
+
+We express these graphs in dot format
+* J-F-Liu/pom (PEG parser)
+
+---
+template: fields_3
+count: false
+
+# Functional testing
+
+```
+#[test]
+fn test_that_fits_in_a_slide() {
+  let parsed = parse_test_dot_file("alice.dot");
+  let alice = Parsec::from_parsed(parsed);
+
+  let fred = PeerId::new("Fred");
+
+  assert!(!alice
+           .peer_list
+           .all_ids()
+           .any(|peer| *peer == fred));
+}
+
+```
+
+---
+template: fields_2
+
+# Integration testing
+
+```
+#[test]
+fn add_many_peers() {
+  let mut env = Environment::new(SEED);
+
+  let options = Schedule::new(
+    &mut env,
+    &ScheduleOptions {
+        genesis_size: 2,
+        peers_to_add: 8,
+        opaque_to_add: 0,
+        ..Default::default()
+    },
+  );
+
+  unwrap!(env.network.execute_schedule(options));
+}
+```
+
+---
+template: fields_3
+
+# Property testing
+
+```
+opts: ScheduleOptionsStrategy {
+  num_peers: (4..=10).into(),
+  num_observations: (1..=10).into(),
+  local_step: (0.01..=1.0).into(),
+  recv_trans: (0.001..0.5).into(),
+  failure: (0.0..1.0).into(),
+  vote_duplication: (0.0..0.5).into(),
+  delay_distr: arbitrary_delay(0..10, 0.0..10.0),
+}
+```
+
+---
+template: fields
+# Performance
+
+### Criterion
+???
+Zero-cost abstractions
+
+---
+template: fields_4
+# Flamegraphs
+
+.fitted-pic[![flame](images/flame.svg)]
 
 ---
 template: the_end
 # Thank you!
-    </textarea>
+	
+	</textarea>
     <script src="https://remarkjs.com/downloads/remark-latest.min.js">
     </script>
     <script>
