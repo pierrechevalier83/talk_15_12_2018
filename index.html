@@ -359,32 +359,59 @@ template: sea
 #### Pierre Chevalier
 #### Maidsafe
 
+???
+* Hi all, I'm Pierre Chevalier I've been working at Maidsafe
+  for slightly under a year.
+* Since I joined, I've been working on PARSEC which is our consensus protocol.
+  I've been working on it since the early design stages and I'm now overseeing the team that's implementing it in Rust.
+
+
+* At Maidsafe, we're building the SAFE Network
+* It's a decentralized and encrypted data and applications network that aims to give back to everyone the privacy, security and Freedom that have been lost in today's internet.
+
+* Today, I'll speak of our next generation consensus protocol: PARSEC
 ---
 template: sea
 
 ## Beyond blockchain: .grey_text[PARSEC]
 ### .grey_text[Bringing consensus to the next level with Rust]
 
+???
+To begin with, I'll cover the first part of my presentation title: "Beyond blockchain" and explain what I mean by that.
+
 ---
 template: sea_2
 # When I say blockchain...
 .large-pic[![image](images/aged-brown-chain.jpg)]
+
+???
+This is late 2018.
+
+Everyone and their mum has heard of blockchain now,
+and maybe blockchain has a less than positive connotation for many of you.
 
 ---
 template: sea_3
 # When I say blockchain...
 ### You may think:
 
+???
+Associations that may come to mind include
 --
 count: false
 * Buzzword
 
+
+???
+* bull market, mainstream adoption, up there with machine learning and the cloud
 
 --
 count: false
 * Volatility
 
 
+???
+* 
 --
 count: false
 * Sh*tcoins
@@ -405,6 +432,10 @@ template: sea_2
 # When I say blockchain...
 .large-pic[![](images/boat-chain-dawn-119562.jpg)]
 
+???
+But do you remember how it felt the first time you learnt about the blockchain?
+
+It used to be very different, wasn't it?
 ---
 template: sea_3
 # When I say blockchain...
@@ -475,10 +506,11 @@ template: sea_3
 
 ---
 template: sea_2
-# Secure
-# Access
-# For
-# Everyone
+# SAFE Network
+### Secure
+### Access
+### For
+### Everyone
 
 ---
 template: sea_3
@@ -487,6 +519,14 @@ template: sea_3
 
 ???
 Our values
+
+* Collaboration/Openness
+
+* Privacy/Security
+
+* Inclusiveness/Respect
+
+* Freedom
 ---
 template: sea_2
 # No mean feat
@@ -555,16 +595,13 @@ template:birds
 ???
 ### In a nutshell
 
-Before diving too deep into the details; let's cover PARSEC at a high level:
+* Gossip
 
-- Nodes on the network use gossip to communicate with each other.
-Gossip is a very efficient way to communicate information in a trustless network.
+* Record everything in a DAG
 
-- As they are gossiping to each other, each node keeps a full record of everything that has been gossiped to them. We call this record the gossip graph.
+* Define the concept of observer
 
-- The gossip graph is a data structure that is eventually consistent; which means that even though different nodes will build different gossip graphs, at some point nodes will have a proof that something that's in their graph will eventually make it to other nodes' graphs.
-
-- What PARSEC does is infer an order on events that were communicated from the gossip graph
+* Reduce the problem of agreement on the next arbitrary value to a simpler problem
 
 ---
 template:birds_3
@@ -585,98 +622,6 @@ O(N)
 - Gossip: pick partner at random every fixed time interval
 O(N*log(N))
 
----
-template:birds
-## PARSEC
-.fitted-pic[![Signatures](images/signature.jpg)]
-???
-Gossiping information is enough to spread it in a resilient manner, but it's not enough to establish trust or to decide an order in which things happened on the network.
-
-Nodes keep a record of everything that's been gossiped to them and they transmit that to other nodes when they're gossiping to them.
-
-They do this with cryptograpically signed messages, which means that they can be proven to have propagated that version of the truth.
-
-This means that if a node sent you a version of the truth and sent someone else a different version; this node would eventually be caught in their lie.
-
----
-template:birds_3
-## PARSEC
-
-### GossipEvent
-
-```rust
-struct Event<T: NetworkEvent, P: PublicId> {
-*   creator: P,
-    signature: P::Signature,
-    self_parent: Option<Hash>,
-    other_parent: Option<Hash>,
-    observation: Option<Vote<T, P>>,
-}
-```
----
-template:birds_3
-count:false
-## PARSEC
-
-### GossipEvent
-
-```rust
-struct Event<T: NetworkEvent, P: PublicId> {
-    creator: P,
-*   signature: P::Signature,
-    self_parent: Option<Hash>,
-    other_parent: Option<Hash>,
-    observation: Option<Vote<T, P>>,
-}
-```
----
-template:birds_3
-count:false
-## PARSEC
-
-### GossipEvent
-
-```rust
-struct Event<T: NetworkEvent, P: PublicId> {
-    creator: P,
-    signature: P::Signature,
-*   self_parent: Option<Hash>,
-    other_parent: Option<Hash>,
-    observation: Option<Vote<T, P>>,
-}
-```
----
-template:birds_3
-count:false
-## PARSEC
-
-### GossipEvent
-
-```rust
-struct Event<T: NetworkEvent, P: PublicId> {
-    creator: P,
-    signature: P::Signature,
-    self_parent: Option<Hash>,
-*   other_parent: Option<Hash>,
-    observation: Option<Vote<T, P>>,
-}
-```
----
-template:birds_3
-count:false
-## PARSEC
-
-### GossipEvent
-
-```rust
-struct Event<T: NetworkEvent, P: PublicId> {
-    creator: P,
-    signature: P::Signature,
-    self_parent: Option<Hash>,
-    other_parent: Option<Hash>,
-*   observation: Option<Vote<T, P>>,
-}
-```
 ---
 template:birds_2
 ## PARSEC
@@ -954,18 +899,6 @@ Assume they could.
 
 Assume Carol created a fork, and an event by Alice strongly sees event cn, and an event by Bob strongly sees cn'. This means that Alice's event sees events by a supermajority of creators that see cn. Bob's event sees events by a supermajority of creators that see cn'.
 
----
-template:birds_2
-count:false
-## PARSEC
-
-### Strongly seen
-
-> If event `x` strongly sees event `y`, no other event<br>
-> can strongly see any event by `y`'s creator that is<br>
-> on a different branch of a fork.
-
-???
 The supermajorities must have an honest node in common - say Dave. Dave would have to have created an event that sees cn and an event that sees cn'. But Dave is honest, so one of those is an ancestor of the other. Say d4 sees cn', and d3 (ancestor of d4) sees cn.
 
 This means that cn is also an ancestor of d4. But by definition of seeing, it follows that d4 can't see either cn or cn', because both branches of the fork contain one of its ancestors. This is a contradiction, because we assumed that d4 sees cn'.
@@ -1048,36 +981,29 @@ count:false
 ---
 template:birds_2
 ## PARSEC
-.fitted-pic[![Meta-election-0](images/meta_election_0.svg)]
+#### Meta-election
 
-???
-Say that multiple nodes created events that are observers. Each observer strongly sees interesting events created by a supermajority, but they might see different supermajorities. How do we get them to agree which of these interesting events should be the next one?
+--
+count: false
+* Each **observer** answers the following question for each node:<br>
+Do I **strongly see** an **interesting event** by this node?
 
-We do this with a process called meta-election. This process allows the nodes to agree about a single binary value for every node: this value means whether the given node's interesting event should be considered for being the next one or not.
+--
+count: false
+* The answer to this question is yes or no: a binary value
 
----
-template:birds_2
-count:false
-## PARSEC
-.fitted-pic[![Meta-election-1](images/meta_election_1.svg)]
+--
+count: false
+* **Binary value consensus** is a simpler problem
 
-???
-To illustrate, we will follow the process of deciding whether Alice's interesting event will be considered for being the next agreed one.
-
-The process starts with observers, and every observer gets a binary value associated with it. The value says whether this observer can strongly see an interesting event created by the node being the subject of the meta-election.
-
-In our example, Alice's observer can strongly see Alice's interesting event; so can Dave's observer. Bob's and Carol's observers cannot.
-
-Thus, the first estimate is "true" for Alice and Dave, and "false" for Bob and Carol.
-
-Note that the values associated with observers are purely functions of the structure of the graph. No additional data needs to be exchanged - each node can arrive at the same values for every observer independently.
+--
+count: false
+* A solved problem(-ish)
 
 ---
 template:birds_1
 ## PARSEC
 
---
-count:false
 #### Binary Agreement
 * Mostefaoui A., Hamouna M., Raynal M.<br>
   Signature-Free Asynchronous Byzantine Consensus with t < n/3 and O(n^2) Messages, ACM PODC (2014)
@@ -1139,8 +1065,6 @@ count: false
 ???
 In the litterature, you find all kinds of fancy algorithms to solve the Byzantine Generals Problem or parts of it; and most of them aren't even efficient.
 Our algorithm only uses simple ideas and composes them to make an elegant solution.
-
-Not to make it sound like we're some kinds of geniuses: the two most powerful, simple and elegant ideas behind PARSEC are the way we solve binary consensus and the concrete coin idea. Both ideas were shameless-ly ripped off from existing papers :D
 
 ---
 template: sea
@@ -1328,18 +1252,19 @@ opts: ScheduleOptionsStrategy {
 ```
 
 ---
-template: fields
-# Performance
+template: fields_4
+# Profiling (flamegraphs)
 
-### Criterion
-???
-Zero-cost abstractions
+.fitted-pic[![flame](images/flame.png)]
 
 ---
-template: fields_4
-# Flamegraphs
+template: fields_2
+# Benchmarking (criterion)
 
-.fitted-pic[![flame](images/flame.svg)]
+.fitted-pic[![borrow checker](images/criterion.png)]
+
+???
+Zero-cost abstractions
 
 ---
 template: the_end
